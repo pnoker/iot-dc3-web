@@ -38,6 +38,7 @@ export default defineComponent({
             driverPage: {
                 total: 0,
                 size: 5,
+                pages: 1,
                 current: 1,
                 orders: [] as Order[],
             },
@@ -46,6 +47,7 @@ export default defineComponent({
             profilePage: {
                 total: 0,
                 size: 5,
+                pages: 1,
                 current: 1,
                 orders: [] as Order[],
             },
@@ -93,6 +95,7 @@ export default defineComponent({
             })
                 .then((res) => {
                     const data = res.data.data
+                    reactiveData.driverPage.pages = data.pages
                     reactiveData.driverPage.total = data.total
                     reactiveData.driverDictionary = data.records
                 })
@@ -120,6 +123,7 @@ export default defineComponent({
             })
                 .then((res) => {
                     const data = res.data.data
+                    reactiveData.profilePage.pages = data.pages
                     reactiveData.profilePage.total = data.total
                     reactiveData.profileDictionary = data.records
                 })
@@ -129,7 +133,7 @@ export default defineComponent({
         }
 
         const profileCurrentChange = (current) => {
-            reactiveData.driverPage.current = current
+            reactiveData.profilePage.current = current
             profileDictionary()
         }
 
