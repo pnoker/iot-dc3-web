@@ -63,6 +63,18 @@
                 <el-tab-pane label="关联设备" name="device">
                     <device ref="deviceViewRef" :embedded="'driver'" :driver-id="reactiveData.id"></device>
                 </el-tab-pane>
+                <el-tab-pane label="信息监控" name="information">
+                    <el-row :gutter="20">
+                        <el-col :span="8" v-for="(item, index) in InforCard" :key="index">
+                            <el-card class="inforcard" shadow="hover">
+                                <p>{{ item.title }}</p>
+                                <p v-for="(line, i) in item.lines" :key="i">{{ line }}</p>
+                            </el-card>
+                        </el-col>
+                    </el-row>
+                    <div id="echart1" class="echart-container" />
+                    <div id="echart2" class="echart-container" />
+                </el-tab-pane>
                 <!-- <el-tab-pane label="驱动模型" name="model">
                     <el-empty description="暂无驱动模型数据！"></el-empty>
                 </el-tab-pane>
@@ -86,7 +98,6 @@
         </base-card>
     </div>
 </template>
-
 <script src="./index.ts" lang="ts" />
 
 <style lang="scss">
@@ -99,5 +110,25 @@
             height: calc(100vh - 273px);
         }
     }
+}
+/* .third-text {
+    border: 1px solid black;
+    text-align: center;
+    font-weight: 400;
+} */
+
+.echart-container {
+    height: 320px;
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+.inforcard {
+    padding: 0;
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
 }
 </style>

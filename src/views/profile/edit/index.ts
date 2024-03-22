@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { defineComponent, reactive, ref, unref } from 'vue'
+import { defineComponent, reactive, ref, unref ,onMounted, watch, onUpdated, nextTick} from 'vue'
 import { FormInstance, FormRules } from 'element-plus'
 import { Edit, RefreshLeft, Right, Back } from '@element-plus/icons-vue'
 
@@ -24,7 +24,7 @@ import { useRoute } from 'vue-router'
 import { getProfileById, updateProfile } from '@/api/profile'
 
 import point from '@/views/point/Point.vue'
-
+import * as echarts from 'echarts'
 export default defineComponent({
     components: { point },
     setup() {
@@ -112,7 +112,6 @@ export default defineComponent({
             if (reactiveData.active === 0) {
                 profileUpdate()
             }
-
             reactiveData.active++
             changeActive(reactiveData.active)
         }

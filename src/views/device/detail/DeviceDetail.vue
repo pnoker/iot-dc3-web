@@ -69,6 +69,21 @@
                 <el-tab-pane label="设备数据" name="pointValue">
                     <point-value ref="pointValueViewRef" :embedded="'device'" :device-id="reactiveData.id"></point-value>
                 </el-tab-pane>
+                <el-tab-pane label="设备详情" name="pointDetail">
+                    <el-row :gutter="20">
+                        <el-col :span="6" v-for="(item, index) in pointCard" :key="index">
+                            <el-card class="inforcard" shadow="hover">
+                                <p>{{ item.title }}</p>
+                                <p v-for="(line, i) in item.lines" :key="i">{{ line }}</p>
+                            </el-card>
+                        </el-col>
+                    </el-row>
+                    <div id="echart1" class="echart-container" />
+                    <el-select v-model="value1" multiple placeholder="" style="width: 200px; float: right">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                    </el-select>
+                    <div id="echart2" class="echart-container" />
+                </el-tab-pane>
                 <!-- <el-tab-pane label="设备模型" name="deviceModel">
                     <el-empty description="暂无设备模型数据！"></el-empty>
                 </el-tab-pane>
@@ -106,4 +121,22 @@
 
 <style lang="scss">
 @import '@/components/card/styles/things-card.scss';
+.select {
+    display: flex;
+    justify-content: end;
+}
+.echart-container {
+    height: 320px;
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+.inforcard {
+    padding: 0;
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+}
 </style>
