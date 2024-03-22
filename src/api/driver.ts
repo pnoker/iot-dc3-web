@@ -42,3 +42,14 @@ export const getDriverStatus = (driver: any) =>
         method: 'post',
         data: driver,
     })
+
+export const getDriverOnline = () =>
+    request<R>({
+        url: `api/v3/data/driver/status/driverOnline/1768309657572560898`,
+        method: 'get',
+    })
+export const getDriverOffline = () =>
+    request<R>({
+        url: `api/v3/data/driver/status/driverOffline/1768309657572560898`,
+        method: 'get',
+    })

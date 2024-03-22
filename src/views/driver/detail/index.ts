@@ -20,7 +20,7 @@ import { Connection, Edit, Management, Monitor, Position, Promotion, Sunset } fr
 import { useRoute } from 'vue-router'
 import router from '@/config/router'
 
-import { getDriverById } from '@/api/driver'
+import { getDriverById, getDriverOnline, getDriverOffline } from '@/api/driver'
 
 import blankCard from '@/components/card/blank/BlankCard.vue'
 import baseCard from '@/components/card/base/BaseCard.vue'
@@ -91,7 +91,6 @@ export default defineComponent({
                     deviceViewRef.value?.refresh()
                     break
                 case 'information':
-                    renderECharts()
                     break
                 case 'event':
                     // to do something
@@ -174,19 +173,15 @@ export default defineComponent({
                         name: '在线时长',
                         type: 'line',
                         stack: 'Total',
-                        lineStyle: {
-                            color: 'green',
-                        },
-                        data: [120, 252, 121, 134, 90, 230, 210],
+                        smooth: true,
+                        data: Object.values(onlinedata.value).reverse(),
                     },
                     {
                         name: '离线时长',
                         type: 'line',
                         stack: 'Total',
-                        lineStyle: {
-                            color: 'red',
-                        },
-                        data: [100, 202, 101, 114, 85, 203, 190],
+                        smooth: true,
+                        data: Object.values(offlinedata.value).reverse(),
                     },
                 ],
             }
@@ -222,6 +217,7 @@ export default defineComponent({
                         name: '在线时长',
                         type: 'line',
                         stack: 'Total',
+                        smooth: true,
                         lineStyle: {
                             color: 'green',
                         },
@@ -231,6 +227,7 @@ export default defineComponent({
                         name: '离线时长',
                         type: 'line',
                         stack: 'Total',
+                        smooth: true,
                         lineStyle: {
                             color: 'red',
                         },
@@ -253,13 +250,27 @@ export default defineComponent({
             renderECharts()
         })
         onMounted(() => {
-            renderECharts()
+            getOnline()
+            getOffline()
         })
+        const onlinedata = ref({})
+        const offlinedata = ref({})
+        const getOnline = async () => {
+            const res = await getDriverOnline()
+            onlinedata.value = res.data.duration
+            renderECharts()
+        }
+        const getOffline = async () => {
+            const res = await getDriverOffline()
+            offlinedata.value = res.data.duration
+            renderECharts()
+        }
         return {
             deviceViewRef,
             reactiveData,
             deviceLength,
             InforCard,
+            onlinedata,
             changeActive,
             timestamp,
             renderECharts,
