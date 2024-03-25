@@ -20,7 +20,7 @@ import { Connection, Edit, Management, Monitor, Position, Promotion, Sunset } fr
 import { useRoute } from 'vue-router'
 import router from '@/config/router'
 
-import { getDriverById, getDriverOnline, getDriverOffline } from '@/api/driver'
+import { getDriverById, getDriverOnline, getDriverOffline, getOnlineId, getOfflineId } from '@/api/driver'
 
 import blankCard from '@/components/card/blank/BlankCard.vue'
 import baseCard from '@/components/card/base/BaseCard.vue'
@@ -265,6 +265,16 @@ export default defineComponent({
             offlinedata.value = res.data.duration
             renderECharts()
         }
+        const getOnlineNum = async () => {
+            const res = await getOnlineId()
+            console.log(res)
+        }
+        getOnlineNum()
+        const getOfflineNum = async () => {
+            const res = await getOfflineId()
+            console.log(res)
+        }
+        getOfflineNum()
         return {
             deviceViewRef,
             reactiveData,

@@ -53,3 +53,15 @@ export const getDriverOffline = () =>
         url: `api/v3/data/driver/status/driverOffline/1768309657572560898`,
         method: 'get',
     })
+//在线设备数据量
+export const getOnlineId = () =>
+    request<R>({
+        url: `api/v3/data/driver/status/getDeviceOnlineByDriverId/1768309657572560898`,
+        method: 'get',
+    })
+//离线设备数据量
+export const getOfflineId = () =>
+    request<R>({
+        url: `api/v3/data/driver/status/getDeviceOfflineByDriverId/1764560313863610369`,
+        method: 'get',
+    })
