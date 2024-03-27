@@ -120,7 +120,7 @@
                             </template>
                         </el-popconfirm>
                         <el-button type="primary" link @click="edit">编辑</el-button>
-                        <el-button type="primary" link disabled @click="detail">详情</el-button>
+                        <el-button type="primary" link @click="detail">详情</el-button>
                     </div>
                 </div>
             </div>

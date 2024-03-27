@@ -27,3 +27,4 @@ pnpm-debug.log*
 yarn.lock
 components.d.ts
 auto-imports.d.ts
+/.history/
