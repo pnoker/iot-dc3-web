@@ -181,7 +181,17 @@ export const importDevice = (device: any) =>
         headers: { 'Content-Type': 'multipart/form-data' },
         data: device,
     })
+    export const getdeviceOnline = () =>
+    request<R>({
+        url: `api/v3/data/device/status/deviceOnline/1768316832571260930`,
+        method: 'get',
+    })
 
+export const getdeviceOffline = () =>
+    request<R>({
+        url: `api/v3/data/device/status/deviceOffline/1768514346554793985`,
+        method: 'get',
+    })
 //位号详情
 export const tagDetailsTotle = () =>
     request<R>({

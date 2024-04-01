@@ -22,7 +22,7 @@ import router from '@/config/router'
 
 import { getDriverById } from '@/api/driver'
 import { getProfileByDeviceId } from '@/api/profile'
-import { getDeviceById } from '@/api/device'
+import { getDeviceById, getdeviceOnline, getdeviceOffline } from '@/api/device'
 import { getProfileByIds } from '@/api/profile'
 
 import baseCard from '@/components/card/base/BaseCard.vue'
@@ -280,19 +280,15 @@ export default defineComponent({
                         name: '在线时长',
                         type: 'line',
                         stack: 'Total',
-                        lineStyle: {
-                            color: 'green',
-                        },
-                        data: [120, 252, 121, 134, 90, 230, 210],
+                        smooth: true,
+                        data: Object.values(onlinedata.value).reverse(),
                     },
                     {
                         name: '离线时长',
                         type: 'line',
                         stack: 'Total',
-                        lineStyle: {
-                            color: 'red',
-                        },
-                        data: [100, 202, 101, 114, 85, 203, 190],
+                        smooth: true,
+                        data: Object.values(offlinedata.value).reverse(),
                     },
                 ],
             }
@@ -350,60 +346,70 @@ export default defineComponent({
                         name: '位号一',
                         type: 'line',
                         stack: 'Total',
+                        smooth: true,
                         data: [120, 132, 101, 134, 90, 230, 210],
                     },
                     {
                         name: '位号二',
                         type: 'line',
                         stack: 'Total',
+                        smooth: true,
                         data: [220, 182, 191, 234, 290, 330, 310],
                     },
                     {
                         name: '位号三',
                         type: 'line',
                         stack: 'Total',
+                        smooth: true,
                         data: [150, 232, 201, 154, 190, 330, 410],
                     },
                     {
                         name: '位号四',
                         type: 'line',
                         stack: 'Total',
+                        smooth: true,
                         data: [320, 332, 301, 334, 390, 330, 320],
                     },
                     {
                         name: '位号五',
                         type: 'line',
                         stack: 'Total',
+                        smooth: true,
                         data: [820, 932, 901, 934, 1290, 1330, 1320],
                     },
                     {
                         name: '位号六',
                         type: 'line',
                         stack: 'Total',
+                        smooth: true,
                         data: [80, 102, 101, 154, 90, 200, 200],
                     },
                     {
                         name: '位号七',
                         type: 'line',
                         stack: 'Total',
+                        smooth: true,
                         data: [110, 112, 171, 134, 100, 230, 1330],
                     },
                     {
                         name: '位号八',
                         type: 'line',
                         stack: 'Total',
+                        smooth: true,
                         data: [132, 132, 101, 1330, 90, 230, 210],
                     },
                     {
                         name: '位号九',
                         type: 'line',
                         stack: 'Total',
+                        smooth: true,
                         data: [120, 102, 1101, 134, 190, 230, 210],
                     },
                     {
                         name: '位号十',
                         type: 'line',
                         stack: 'Total',
+                        smooth: true,
                         data: [320, 132, 1101, 134, 190, 230, 1210],
                     },
                 ],
@@ -429,9 +435,24 @@ export default defineComponent({
             Echart2()
         })
         onMounted(() => {
-            Echart1()
+            getOnline()
+            getOffline()
             Echart2()
         })
+        const onlinedata = ref({})
+        const offlinedata = ref({})
+        const getOnline = async () => {
+            const res = await getdeviceOnline()
+            onlinedata.value = res.data.duration
+            console.log(res.data.duration)
+            Echart1()
+        }
+        const getOffline = async () => {
+            const res = await getdeviceOffline()
+            offlinedata.value = res.data.duration
+            console.log(res.data.duration)
+            Echart1()
+        }
         return {
             profileViewRef,
             pointViewRef,
