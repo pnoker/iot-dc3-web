@@ -65,7 +65,7 @@
                 </el-tab-pane>
                 <el-tab-pane label="信息监控" name="information">
                     <el-row :gutter="20">
-                        <el-col :span="8" v-for="(item, index) in InforCard" :key="index">
+                        <el-col :span="8" v-for="(item, index) in InforCard()" :key="index">
                             <el-card class="inforcard" shadow="hover">
                                 <p>{{ item.title }}</p>
                                 <p v-for="(line, i) in item.lines" :key="i">{{ line }}</p>

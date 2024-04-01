@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { defineComponent, reactive, ref, computed, onUpdated, onMounted, nextTick, onBeforeUnmount } from 'vue'
+import { defineComponent, reactive, ref, computed, onUpdated, onMounted, nextTick } from 'vue'
 import { Connection, Edit, Management, Monitor, Position, Promotion, Sunset } from '@element-plus/icons-vue'
 
 import { useRoute } from 'vue-router'
 import router from '@/config/router'
 
-import { getDriverById, getDriverOnline, getDriverOffline, getOnlineId, getOfflineId } from '@/api/driver'
+import { getDriverById, getDriverOnline, getDriverOffline, getOnlineId, getOfflineId, getDriverId, getDataPointId, gettotalpointId, getStatisticsrId } from '@/api/driver'
 
 import blankCard from '@/components/card/blank/BlankCard.vue'
 import baseCard from '@/components/card/base/BaseCard.vue'
@@ -104,20 +104,6 @@ export default defineComponent({
         driver()
 
         //信息监控
-        const InforCard = [
-            {
-                title: '驱动运行时长',
-                lines: ['XX在线时长', 'XX离线时长'],
-            },
-            {
-                title: '驱动下设备数量',
-                lines: ['设备数量:XX', '当前在线设备数量:XX', '当前离线设备数量:XX'],
-            },
-            {
-                title: '驱动下位号数据量:XXX',
-                lines: ['总位号数量:XXX'],
-            },
-        ]
         const renderECharts = () => {
             const echart1Element = document.getElementById('echart1')
             const echart2Element = document.getElementById('echart2')
@@ -214,24 +200,11 @@ export default defineComponent({
                 ],
                 series: [
                     {
-                        name: '在线时长',
+                        name: '位号数据量',
                         type: 'line',
                         stack: 'Total',
                         smooth: true,
-                        lineStyle: {
-                            color: 'green',
-                        },
-                        data: [120, 252, 121, 134, 90, 230, 210],
-                    },
-                    {
-                        name: '离线时长',
-                        type: 'line',
-                        stack: 'Total',
-                        smooth: true,
-                        lineStyle: {
-                            color: 'red',
-                        },
-                        data: [100, 202, 101, 114, 85, 203, 190],
+                        data: Object.values(whechart.value).reverse(),
                     },
                 ],
             }
@@ -252,29 +225,78 @@ export default defineComponent({
         onMounted(() => {
             getOnline()
             getOffline()
+            getStatisticsr()
         })
         const onlinedata = ref({})
         const offlinedata = ref({})
+        const OFdriverName = ref('')
+        const ONdriverName = ref('')
         const getOnline = async () => {
             const res = await getDriverOnline()
+            ONdriverName.value = res.data.driverName
             onlinedata.value = res.data.duration
             renderECharts()
         }
+
         const getOffline = async () => {
             const res = await getDriverOffline()
+            OFdriverName.value = res.data.driverName
             offlinedata.value = res.data.duration
             renderECharts()
         }
+        const ONmseeage = ref('')
+        const OFmseeage = ref('')
+        const allmseeage = ref('')
         const getOnlineNum = async () => {
             const res = await getOnlineId()
-            console.log(res)
+            ONmseeage.value = res.message
         }
         getOnlineNum()
         const getOfflineNum = async () => {
             const res = await getOfflineId()
-            console.log(res)
+            OFmseeage.value = res.message
         }
         getOfflineNum()
+        const getallNum = async () => {
+            const res = await getDriverId()
+            allmseeage.value = res.message
+        }
+        getallNum()
+        //位号数据量
+        const whdata = ref('')
+        const getPointId = async () => {
+            const res = await getDataPointId()
+            whdata.value = res.data
+        }
+        getPointId()
+        //总位号数量
+        const totalpoint = ref('')
+        const getTotalPoint = async () => {
+            const res = await gettotalpointId()
+            totalpoint.value = res.data
+        }
+        getTotalPoint()
+        //统计7天驱动下位号数据量
+        const whechart = ref({})
+        const getStatisticsr = async () => {
+            const res = await getStatisticsrId()
+            whechart.value = res.data.total
+            renderECharts()
+        }
+        const InforCard = () => [
+            {
+                title: '驱动运行时长',
+                lines: [`${ONdriverName.value}在线时长`, `${OFdriverName.value}离线时长`],
+            },
+            {
+                title: '驱动下设备数量',
+                lines: [`设备数量:${allmseeage.value}`, `当前在线设备数量:${ONmseeage.value}`, `当前离线设备数量:${OFmseeage.value}`],
+            },
+            {
+                title: `驱动下位号数据量:${whdata.value}`,
+                lines: [`总位号数量:${totalpoint.value}`],
+            },
+        ]
         return {
             deviceViewRef,
             reactiveData,

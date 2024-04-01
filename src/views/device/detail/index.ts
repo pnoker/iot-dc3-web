@@ -22,7 +22,7 @@ import router from '@/config/router'
 
 import { getDriverById } from '@/api/driver'
 import { getProfileByDeviceId } from '@/api/profile'
-import { getDeviceById, getdeviceOnline, getdeviceOffline } from '@/api/device'
+import { getDeviceById, getdeviceOnline, getdeviceOffline, pointByDeviceId, pointConfigByDeviceId, deviceStatisticsByPointId } from '@/api/device'
 import { getProfileByIds } from '@/api/profile'
 
 import baseCard from '@/components/card/base/BaseCard.vue'
@@ -179,16 +179,6 @@ export default defineComponent({
         profiles()
         //设备详情
         const value1 = ref(['位号一'])
-        const pointCard = [
-            {
-                title: '设备运行时间',
-                lines: ['总在线时长:XX', '总离线时长:XXX'],
-            },
-            {
-                title: '位号统计',
-                lines: ['位号数量:XX', '已配置的位号数量:XX', '未配置的位号数量:XX'],
-            },
-        ]
         const options = [
             {
                 value: '位号一',
@@ -441,18 +431,58 @@ export default defineComponent({
         })
         const onlinedata = ref({})
         const offlinedata = ref({})
+        const Onname = ref('')
+        const Ofname = ref('')
         const getOnline = async () => {
             const res = await getdeviceOnline()
             onlinedata.value = res.data.duration
-            console.log(res.data.duration)
+            Onname.value = res.data.deviceName
+            console.log('在线', res.data.deviceName)
             Echart1()
         }
         const getOffline = async () => {
             const res = await getdeviceOffline()
             offlinedata.value = res.data.duration
-            console.log(res.data.duration)
+            Ofname.value = res.data.deviceName
+            console.log('离线', res.data.deviceName)
             Echart1()
         }
+        //位号数量
+        const whnumber = ref('')
+        const PointByDeviceId = async () => {
+            const res = await pointByDeviceId()
+            whnumber.value = res.data
+        }
+        PointByDeviceId()
+        //设备下已配置位号数量
+        const unConfigCount = ref('')
+        const configCount = ref('')
+        /*   const pointName=ref('')
+        const id=ref('') */
+        const ConfigByDeviceId = async () => {
+            const res = await pointConfigByDeviceId()
+            console.log(res)
+            unConfigCount.value = res.data.unConfigCount
+            configCount.value = res.data.configCount
+        }
+        ConfigByDeviceId()
+        //设备在不同位号下的数据量
+        const pointid = ref('1768514129788968962')
+        const DeviceByPointId = async () => {
+            const res = await deviceStatisticsByPointId(pointid.value)
+            console.log(res)
+        }
+        DeviceByPointId()
+        const pointCard = () => [
+            {
+                title: '设备运行时间',
+                lines: [`总在线时长:${Onname.value}`, `总离线时长:${Ofname.value}`],
+            },
+            {
+                title: '位号统计',
+                lines: [`位号数量:${whnumber.value}`, `已配置的位号数量:${configCount.value}`, `未配置的位号数量:${unConfigCount.value}`],
+            },
+        ]
         return {
             profileViewRef,
             pointViewRef,

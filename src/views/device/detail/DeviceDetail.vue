@@ -71,7 +71,7 @@
                 </el-tab-pane>
                 <el-tab-pane label="设备详情" name="pointDetail">
                     <el-row :gutter="20">
-                        <el-col :span="6" v-for="(item, index) in pointCard" :key="index">
+                        <el-col :span="6" v-for="(item, index) in pointCard()" :key="index">
                             <el-card class="inforcard" shadow="hover">
                                 <p>{{ item.title }}</p>
                                 <p v-for="(line, i) in item.lines" :key="i">{{ line }}</p>

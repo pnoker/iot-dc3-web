@@ -65,3 +65,27 @@ export const getOfflineId = () =>
         url: `api/v3/data/driver/status/getDeviceOfflineByDriverId/1764560313863610369`,
         method: 'get',
     })
+//设备数量
+export const getDriverId = () =>
+    request<R>({
+        url: `api/v3/manager//device/getDeviceByDriverId/1764560313863610369`,
+        method: 'get',
+    })
+//驱动下位号数据量
+export const getDataPointId = () =>
+    request<R>({
+        url: `api/v3/manager/point/selectPointDataByDriverId/1764560313863610369`,
+        method: 'get',
+    })
+//总位号数量
+export const gettotalpointId = () =>
+    request<R>({
+        url: `api/v3/manager/point/selectPointByDriverId/1764560313863610369`,
+        method: 'get',
+    })
+//统计7天驱动下位号数据量
+export const getStatisticsrId = () =>
+    request<R>({
+        url: `api/v3/manager/point/selectPointDataStatisticsByDriverId/1764560313863610369`,
+        method: 'get',
+    })

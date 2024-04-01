@@ -209,3 +209,22 @@ export const tagDetailsEquipments = (deviceId) =>
         method: 'POST',
         data:  deviceId
     })
+
+    export const pointByDeviceId = () =>
+    request<R>({
+        url: `api/v3/manager/point/selectPointByDeviceId/1768514346554793985`,
+        method: 'get',
+    })
+//设备下已配置位号数量
+export const pointConfigByDeviceId = () =>
+    request<R>({
+        url: `api/v3/manager/point/selectPointConfigByDeviceId/1768514346554793985`,
+        method: 'get',
+    })
+//设备在不同位号下的数据量
+export const deviceStatisticsByPointId = (pointid: any) =>
+    request<R>({
+        url: `api/v3/manager/point/selectDeviceStatisticsByPointId/1768316832571260930`,
+        method: 'post',
+        data: JSON.stringify([pointid]),
+    })
