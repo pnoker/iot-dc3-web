@@ -20,7 +20,7 @@ import { CollectionTag, Edit, Management, Sunset } from '@element-plus/icons-vue
 import { useRoute } from 'vue-router'
 import router from '@/config/router'
 
-import { getDeviceByDriverId, getDeviceStatusByDriverId } from '@/api/device'
+import { getDeviceByDriverId, getDeviceStatusByDriverId,tagDetailsTotle,tagDetailsData,tagDetailsEquipments } from '@/api/device'
 import { getProfileByIds } from '@/api/profile'
 import { getDriverByIds } from '@/api/driver'
 import { getDriverById } from '@/api/driver'
@@ -45,7 +45,6 @@ export default defineComponent({
     },
     setup() {
         const route = useRoute()
-
         // 定义响应式数据
         const reactiveData = reactive({
             id: route.query.id as string,
@@ -57,6 +56,17 @@ export default defineComponent({
             listDeviceData: [] as any[],
         })
 
+        //定义位号详情页响应式
+        const getTagDetailsData = reactive({
+            total: 0,
+            data:'',
+            deviceName:[],
+            equipment:'',
+            equipment1Name:''
+        })
+        const selectedOptions = ref([])
+        // const value1 = ref([])
+        const selectedDeviceValue = ref([])
         const driver = () => {
             getDriverById(reactiveData.id)
                 .then((res) => {
@@ -111,103 +121,105 @@ export default defineComponent({
                     // nothing to do
                 })
         }
-
+        const tagDetails = ()=>{
+            tagDetailsTotle()
+                .then((res)=>{
+                    console.log(res)
+                    getTagDetailsData.total = res.data.count
+                    getTagDetailsData.deviceName = res.data.devices.map((device: { deviceName: any }) => device.deviceName)
+                    const deviceNameToAdd = getTagDetailsData.deviceName[0];
+                    selectedOptions.value = res.data.devices.map((device: { id: any; deviceName: any }) => ({
+                        value: device.id, // 使用设备的 id 作为 value
+                        label: device.deviceName // 使用设备的 deviceName 作为 label
+                    }));
+                    selectedDeviceValue.value = selectedOptions.value.map(option => option.value);
+                    console.log(selectedDeviceValue.value)
+                    return tagDetailsData();
+                })
+                .then((res)=>{
+                    getTagDetailsData.data = res.data
+                    console.log(selectedDeviceValue.value)
+                    return tagDetailsEquipments(selectedDeviceValue.value);
+                    
+                })
+                .then((res)=>{
+                    console.log(selectedDeviceValue.value)
+                    console.log(res)
+                    getTagDetailsData.equipment = res.data.map(device =>({
+                        name: device.deviceName,
+                        total: device.total,
+                    }))
+                    console.log(getTagDetailsData.equipment)
+                    Echart2(getTagDetailsData);
+                })                
+                .catch(() => {
+                    // nothing to do
+                })
+        }
         const deviceName = () => {
             return reactiveData.listDeviceData.map((device) => device.pointName).join(', ')
         }
 
-        const changeActive = (tab) => {
+        const changeActive = (tab: { props: { name: any } }) => {
             const query = route.query
             router.push({ query: { ...query, active: tab.props.name } }).catch(() => {
                 // nothing to do
             })
             switch (tab.props.name) {
                 case 'whdetail':
-                    Echart2()
+                    // Echart2()
                     break
                 default:
                     break
             }
         }
+        const updateChart = () => {
+            const deletedValues = selectedOptions.value.filter(option => !selectedDeviceValue.value.includes(option.value));
+            const addedValues = selectedDeviceValue.value.filter(value => !selectedOptions.value.some(option => option.value === value));
+        
+            const updateChartData = (res) => {
+                console.log(res)
+                getTagDetailsData.equipment = res.data.map(device => ({
+                    name: device.deviceName,
+                    total: device.total,
+                }));
+                Echart2(getTagDetailsData);
+            };
+        
+            if (deletedValues.length > 0 || addedValues.length > 0) {
+                selectedOptions.value = selectedOptions.value.filter(option => !deletedValues.includes(option.value));
+                selectedDeviceValue.value = selectedDeviceValue.value.filter(value => !deletedValues.includes(value));
+                tagDetailsEquipments(selectedDeviceValue.value).then(updateChartData);
+            } else {
+                tagDetailsEquipments(selectedDeviceValue.value).then(updateChartData);
+            }
+        };
 
         driver()
         device()
 
         //位号详情
-        const InforCard = [
+        const InforCard =()=> [
             {
-                title: '当前位号被XX个设备引用',
+                title: `当前位号被${getTagDetailsData.total}个设备引用`,
             },
             {
-                title: '当前位号下数据量:XXX',
+                title: `当前位号下数据量:${getTagDetailsData.data}`,
             },
         ]
         onMounted(() => {
-            Echart2()
+            tagDetails()
+            Echart2(getTagDetailsData)
         })
-        const value1 = ref(['设备一'])
-        const options = [
-            {
-                value: '设备一',
-                label: '设备一',
-            },
-            {
-                value: '设备二',
-                label: '设备二',
-            },
-            {
-                value: '设备三',
-                label: '设备三',
-            },
-            {
-                value: '设备四',
-                label: '设备四',
-            },
-            {
-                value: '设备五',
-                label: '设备五',
-            },
-            {
-                value: '设备六',
-                label: '设备六',
-            },
-            {
-                value: '设备七',
-                label: '设备七',
-            },
-            {
-                value: '设备八',
-                label: '设备八',
-            },
-            {
-                value: '设备九',
-                label: '设备九',
-            },
-            {
-                value: '设备十',
-                label: '设备十',
-            },
-        ]
-        watch(value1, (newVal) => {
-            Echart2(newVal)
-        })
-        const Echart2 = () => {
-            const initChart = () => {
-                const chartDom = document.getElementById('echart2')
-                if (!chartDom || chartDom.offsetWidth === 0 || chartDom.offsetHeight === 0) {
-                    // 如果未加载完或者宽高为0，终止初始化
-                    return
-                }
-
-                let myChart = echarts.init(chartDom)
-                if (myChart) {
-                    myChart.dispose() // 销毁已经初始化的实例
-                }
-                myChart = echarts.init(chartDom)
-                let option
-                option = {
+        const Echart2 = (getTagDetailsData)=>{
+            var chartDom = document.getElementById('echart2');
+            echarts.dispose(chartDom);
+            var myChart = echarts.init(chartDom);
+            var option;
+            console.log(getTagDetailsData.equipment)
+            option = {
                     title: {
-                        text: '统计最近7天位号在不同设备下产生的数据量',
+                        text: '统计最近7天位号在不同设备下产生的数据量，最多展示10个设备，可通过下拉选择',
                         bottom: 'bottom',
                         textStyle: {
                             fontSize: 14,
@@ -230,101 +242,41 @@ export default defineComponent({
                             type: 'value',
                         },
                     ],
-                    series: [
-                        {
-                            name: '设备一',
-                            type: 'line',
-                            stack: 'Total',
-                            data: [120, 132, 101, 134, 90, 230, 210],
-                        },
-                        {
-                            name: '设备二',
-                            type: 'line',
-                            stack: 'Total',
-                            data: [220, 182, 191, 234, 290, 330, 310],
-                        },
-                        {
-                            name: '设备三',
-                            type: 'line',
-                            stack: 'Total',
-                            data: [150, 232, 201, 154, 190, 330, 410],
-                        },
-                        {
-                            name: '设备四',
-                            type: 'line',
-                            stack: 'Total',
-                            data: [320, 332, 301, 334, 390, 330, 320],
-                        },
-                        {
-                            name: '设备五',
-                            type: 'line',
-                            stack: 'Total',
-                            data: [820, 932, 901, 934, 1290, 1330, 1320],
-                        },
-                        {
-                            name: '设备六',
-                            type: 'line',
-                            stack: 'Total',
-                            data: [80, 102, 101, 154, 90, 200, 200],
-                        },
-                        {
-                            name: '设备七',
-                            type: 'line',
-                            stack: 'Total',
-                            data: [110, 112, 171, 134, 100, 230, 1330],
-                        },
-                        {
-                            name: '设备八',
-                            type: 'line',
-                            stack: 'Total',
-                            data: [132, 132, 101, 1330, 90, 230, 210],
-                        },
-                        {
-                            name: '设备九',
-                            type: 'line',
-                            stack: 'Total',
-                            data: [120, 102, 1101, 134, 190, 230, 210],
-                        },
-                        {
-                            name: '设备十',
-                            type: 'line',
-                            stack: 'Total',
-                            data: [320, 132, 1101, 134, 190, 230, 1210],
-                        },
-                    ],
+                    series: [] as { name: string; type: string; stack: string; smooth: boolean; data: any; }[],
+                };
+
+                for (let i = 0; i < Math.min(getTagDetailsData.equipment.length, 10); i++) {
+                    console.log(getTagDetailsData.equipment)
+                    const seriesData = {
+                        name: getTagDetailsData.equipment[i].name,
+                        type: 'line',
+                        smooth: true,
+                        data: getTagDetailsData.equipment[i].total,
+                    };
+                
+                    option.series.push(seriesData);
                 }
 
-                const updateChart = () => {
-                    const filteredSeries = option.series.filter((series) => value1.value.includes(series.name))
-                    const newOption = { ...option, series: filteredSeries }
-                    myChart.setOption(newOption)
-                }
-
-                updateChart()
-
+            option && myChart.setOption(option);
+            nextTick(() => {
                 window.addEventListener('resize', () => {
                     myChart.resize()
                 })
-                nextTick(() => {
-                    myChart.resize()
-                })
-            }
-
-            initChart()
+            })
         }
-        onUpdated(() => {
-            Echart2()
-        })
         return {
             reactiveData,
-            options,
-            value1,
+            selectedOptions,
+            selectedDeviceValue,
+            // value1,
             InforCard,
             Echart2,
             driver,
             device,
+            tagDetails,
             deviceName,
             changeActive,
+            updateChart,
             timestamp,
         }
     },

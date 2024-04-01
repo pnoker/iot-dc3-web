@@ -60,14 +60,14 @@
                 </el-tab-pane>
                 <el-tab-pane label="位号详情" name="whdetail">
                     <el-row :gutter="20">
-                        <el-col :span="6" v-for="(item, index) in InforCard" :key="index">
+                        <el-col :span="6" v-for="(item, index) in InforCard()" :key="index">
                             <el-card class="inforcard" shadow="hover">
                                 <p>{{ item.title }}</p>
                             </el-card>
                         </el-col>
                     </el-row>
-                    <el-select v-model="value1" multiple placeholder="" style="width: 200px; float: right; margin-top: 20px">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                    <el-select v-model="selectedDeviceValue" multiple placeholder="" style="width: 200px; float: right; margin-top: 20px" @change="updateChart">
+                        <el-option v-for="item in selectedOptions" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                     <div id="echart2" class="echart-container" />
                 </el-tab-pane>
@@ -87,7 +87,7 @@
 
 .echart-container {
     height: 520px;
-    width: 100%;
+    width: 100vw;
     margin-top: 30px;
     margin-bottom: 20px;
 }

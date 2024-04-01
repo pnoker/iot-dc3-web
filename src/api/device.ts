@@ -181,3 +181,21 @@ export const importDevice = (device: any) =>
         headers: { 'Content-Type': 'multipart/form-data' },
         data: device,
     })
+
+//位号详情
+export const tagDetailsTotle = () =>
+    request<R>({
+        url: `api/v3/manager/point/selectPointStatisticsWithDevice/1768514129788968962`,
+        method: 'GET',
+    })
+export const tagDetailsData = () =>
+    request<R>({
+        url: `api/v3/manager/point/selectPointStatisticsByPointId/1768316736936935426`,
+        method: 'GET',
+    })
+export const tagDetailsEquipments = (deviceId) =>
+    request<R>({
+        url: `api/v3/manager/point/selectPointStatisticsByDeviceId/1768514129788968962`,
+        method: 'POST',
+        data:  deviceId
+    })
