@@ -178,67 +178,14 @@ export default defineComponent({
         device()
         profiles()
         //设备详情
-        const value1 = ref(['位号一'])
-        const options = [
-            {
-                value: '位号一',
-                label: '位号一',
-            },
-            {
-                value: '位号二',
-                label: '位号二',
-            },
-            {
-                value: '位号三',
-                label: '位号三',
-            },
-            {
-                value: '位号四',
-                label: '位号四',
-            },
-            {
-                value: '位号五',
-                label: '位号五',
-            },
-            {
-                value: '位号六',
-                label: '位号六',
-            },
-            {
-                value: '位号七',
-                label: '位号七',
-            },
-            {
-                value: '位号八',
-                label: '位号八',
-            },
-            {
-                value: '位号九',
-                label: '位号九',
-            },
-            {
-                value: '位号十',
-                label: '位号十',
-            },
-        ]
-        watch(value1, (newVal) => {
-            Echart2(newVal)
-        })
+        
+       
         const Echart1 = () => {
-            const echart1Element = document.getElementById('echart1')
-            if (echart1Element.offsetWidth === 0) {
-                // 如果 echarts 容器的宽度或高度为 0，则等待 DOM 加载完成后再进行初始化
-                window.addEventListener('load', () => {
-                    Echart1()
-                })
-                return
-            }
-            let chart1 = echarts.getInstanceByDom(echart1Element)
-            if (chart1) {
-                chart1.dispose()
-            }
-            chart1 = echarts.init(echart1Element)
-            const option = {
+            var chartDom1 = document.getElementById('echart1');
+            echarts.dispose(chartDom1);
+            var myChart1 = echarts.init(chartDom1);
+            var option;
+            option = {
                 title: {
                     text: '统计最近7天驱动每天的在线和离线时长',
                     bottom: 'bottom',
@@ -282,152 +229,23 @@ export default defineComponent({
                     },
                 ],
             }
-            chart1.setOption(option)
-
+            option && myChart1.setOption(option);
             nextTick(() => {
-                chart1.resize()
-            })
-            window.addEventListener('resize', () => {
-                chart1.resize()
-            })
-        }
-        const Echart2 = () => {
-            const chartDom = document.getElementById('echart2')
-            if (chartDom.offsetWidth === 0) {
-                // 如果 echarts 容器的宽度或高度为 0，则等待 DOM 加载完成后再进行初始化
-                window.addEventListener('load', () => {
-                    Echart2()
+                window.addEventListener('resize', () => {
+                    myChart1.resize()
                 })
-                return
-            }
-            let myChart = echarts.getInstanceByDom(chartDom)
-            if (myChart) {
-                myChart.dispose() // 销毁已经初始化的实例
-            }
-            myChart = echarts.init(chartDom)
-            let option
-            option = {
-                title: {
-                    text: '统计最近7天设备下各个位号的每天数据量',
-                    bottom: 'bottom',
-                    textStyle: {
-                        fontSize: 14,
-                    },
-                },
-                tooltip: { trigger: 'axis' },
-                grid: {
-                    left: '3%',
-                    right: '4%',
-                    bottom: '15%',
-                    containLabel: true,
-                },
-                xAxis: {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: ['1', '2', '3', '4', '5', '6', '7'],
-                },
-                yAxis: [
-                    {
-                        type: 'value',
-                    },
-                ],
-                series: [
-                    {
-                        name: '位号一',
-                        type: 'line',
-                        stack: 'Total',
-                        smooth: true,
-                        data: [120, 132, 101, 134, 90, 230, 210],
-                    },
-                    {
-                        name: '位号二',
-                        type: 'line',
-                        stack: 'Total',
-                        smooth: true,
-                        data: [220, 182, 191, 234, 290, 330, 310],
-                    },
-                    {
-                        name: '位号三',
-                        type: 'line',
-                        stack: 'Total',
-                        smooth: true,
-                        data: [150, 232, 201, 154, 190, 330, 410],
-                    },
-                    {
-                        name: '位号四',
-                        type: 'line',
-                        stack: 'Total',
-                        smooth: true,
-                        data: [320, 332, 301, 334, 390, 330, 320],
-                    },
-                    {
-                        name: '位号五',
-                        type: 'line',
-                        stack: 'Total',
-                        smooth: true,
-                        data: [820, 932, 901, 934, 1290, 1330, 1320],
-                    },
-                    {
-                        name: '位号六',
-                        type: 'line',
-                        stack: 'Total',
-                        smooth: true,
-                        data: [80, 102, 101, 154, 90, 200, 200],
-                    },
-                    {
-                        name: '位号七',
-                        type: 'line',
-                        stack: 'Total',
-                        smooth: true,
-                        data: [110, 112, 171, 134, 100, 230, 1330],
-                    },
-                    {
-                        name: '位号八',
-                        type: 'line',
-                        stack: 'Total',
-                        smooth: true,
-                        data: [132, 132, 101, 1330, 90, 230, 210],
-                    },
-                    {
-                        name: '位号九',
-                        type: 'line',
-                        stack: 'Total',
-                        smooth: true,
-                        data: [120, 102, 1101, 134, 190, 230, 210],
-                    },
-                    {
-                        name: '位号十',
-                        type: 'line',
-                        stack: 'Total',
-                        smooth: true,
-                        data: [320, 132, 1101, 134, 190, 230, 1210],
-                    },
-                ],
-            }
-
-            const updateChart = () => {
-                const filteredSeries = option.series.filter((series) => value1.value.includes(series.name))
-                const newOption = { ...option, series: filteredSeries }
-                myChart.setOption(newOption)
-            }
-
-            updateChart()
-
-            window.addEventListener('resize', () => {
-                myChart.resize()
-            })
-            nextTick(() => {
-                myChart.resize()
             })
         }
         onUpdated(() => {
             Echart1()
-            Echart2()
+            Echart2(chartData)
         })
         onMounted(() => {
             getOnline()
             getOffline()
-            Echart2()
+            ConfigByDeviceId()
+            Echart1()
+            Echart2(chartData)
         })
         const onlinedata = ref({})
         const offlinedata = ref({})
@@ -457,22 +275,127 @@ export default defineComponent({
         //设备下已配置位号数量
         const unConfigCount = ref('')
         const configCount = ref('')
-        /*   const pointName=ref('')
-        const id=ref('') */
+        const value1 = ref([])
+        const options = ref([])
+        // watch(value1, (newVal) => {
+        //     Echart2(newVal)
+        // })
         const ConfigByDeviceId = async () => {
-            const res = await pointConfigByDeviceId()
-            console.log(res)
-            unConfigCount.value = res.data.unConfigCount
-            configCount.value = res.data.configCount
+            try{
+                const res = await pointConfigByDeviceId()
+                console.log(res)
+                unConfigCount.value = res.data.unConfigCount
+                configCount.value = res.data.configCount
+                options.value = res.data.points.map((point: { id: any; pointName: any }) => ({
+                    value: point.id,
+                    label: point.pointName
+                }));
+                value1.value = options.value.map(option => option.value);
+                console.log(value1.value)
+                await DeviceByPointId()
+            }catch (error) {
+                console.error('发生错误:', error);
+            }
+        }
+        //设备在不同位号下的数据量
+        const chartData = ref('')
+        const DeviceByPointId = async () => {
+            try{
+                // console.log(value1.value)
+                const res = await deviceStatisticsByPointId(value1.value)
+                console.log(res)
+                chartData.value = res.data.map(point =>({
+                    name: point.pointName,
+                    total: point.total,
+                }))
+                console.log(chartData.value)
+                Echart2(chartData);
+            }catch (error) {
+                console.error('发生错误:', error);
+            }
         }
         ConfigByDeviceId()
-        //设备在不同位号下的数据量
-        const pointid = ref('1768514129788968962')
-        const DeviceByPointId = async () => {
-            const res = await deviceStatisticsByPointId(pointid.value)
-            console.log(res)
+        // DeviceByPointId()
+        const Echart2 = (chartData)=>{
+            var chartDom = document.getElementById('echart2');
+            echarts.dispose(chartDom);
+            var myChart = echarts.init(chartDom);
+            var option;
+            option = {
+                    title: {
+                        text: '统计最近7天设备下各个位号的每天数据量',
+                        bottom: 'bottom',
+                        textStyle: {
+                            fontSize: 14,
+                        },
+                    },
+                    tooltip: { trigger: 'axis' },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '15%',
+                        containLabel: true,
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: ['1', '2', '3', '4', '5', '6', '7'],
+                    },
+                    yAxis: [
+                        {
+                            type: 'value',
+                        },
+                    ],
+                    series: [] as { name: string; type: string; stack: string; smooth: boolean; data: any; }[],
+                };
+
+                for (let i = 0; i < Math.min(chartData.value.length, 10); i++) {
+                    console.log(chartData.value.length)
+                    const seriesData = {
+                        name: chartData.value[i].name,
+                        type: 'line',
+                        smooth: true,
+                        data: chartData.value[i].total,
+                    };
+                
+                    option.series.push(seriesData);
+                }
+
+            option && myChart.setOption(option);
+            nextTick(() => {
+                window.addEventListener('resize', () => {
+                    myChart.resize()
+                })
+            })
         }
-        DeviceByPointId()
+        const updateChart = () => {
+            console.log('111')
+            const deletedValues = options.value.filter(option => !value1.value.includes(option.value));
+            const addedValues = value1.value.filter(value => !options.value.some(option => option.value === value));
+        
+            const updateChartData = (res) => {
+                console.log(res)
+                chartData.value = res.data.map(device => ({
+                    name: device.deviceName,
+                    total: device.total,
+                }));
+                Echart2(chartData);
+            };
+        
+            if (value1.value.length === 0 && options.value.length > 0) {
+                value1.value = [options.value[0].value];
+            }
+        
+            if (deletedValues.length > 0 || addedValues.length > 0) {
+                options.value = options.value.filter(option => !deletedValues.includes(option.value));
+                value1.value = value1.value.filter(value => !deletedValues.includes(value));
+                deviceStatisticsByPointId(value1.value).then(updateChartData);
+                console.log(value1.value)
+            } else {
+                deviceStatisticsByPointId(value1.value).then(updateChartData);
+                console.log(value1.value)
+            }
+        };
         const pointCard = () => [
             {
                 title: '设备运行时间',
@@ -493,6 +416,7 @@ export default defineComponent({
             hasPointValueData,
             options,
             value1,
+            updateChart,
             pointCard,
             updateThing,
             changeActive,

@@ -127,7 +127,7 @@ export default defineComponent({
                     console.log(res)
                     getTagDetailsData.total = res.data.count
                     getTagDetailsData.deviceName = res.data.devices.map((device: { deviceName: any }) => device.deviceName)
-                    const deviceNameToAdd = getTagDetailsData.deviceName[0];
+                    // const deviceNameToAdd = getTagDetailsData.deviceName[0];
                     selectedOptions.value = res.data.devices.map((device: { id: any; deviceName: any }) => ({
                         value: device.id, // 使用设备的 id 作为 value
                         label: device.deviceName // 使用设备的 deviceName 作为 label
@@ -140,7 +140,6 @@ export default defineComponent({
                     getTagDetailsData.data = res.data
                     console.log(selectedDeviceValue.value)
                     return tagDetailsEquipments(selectedDeviceValue.value);
-                    
                 })
                 .then((res)=>{
                     console.log(selectedDeviceValue.value)
@@ -185,6 +184,10 @@ export default defineComponent({
                 }));
                 Echart2(getTagDetailsData);
             };
+        
+            if (selectedDeviceValue.value.length === 0 && selectedOptions.value.length > 0) {
+                selectedDeviceValue.value = [selectedOptions.value[0].value];
+            }
         
             if (deletedValues.length > 0 || addedValues.length > 0) {
                 selectedOptions.value = selectedOptions.value.filter(option => !deletedValues.includes(option.value));

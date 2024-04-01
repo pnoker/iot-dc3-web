@@ -79,7 +79,7 @@
                         </el-col>
                     </el-row>
                     <div id="echart1" class="echart-container" />
-                    <el-select v-model="value1" multiple placeholder="" style="width: 200px; float: right">
+                    <el-select v-model="value1" multiple placeholder="" style="width: 200px; float: right" @change="updateChart">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                     <div id="echart2" class="echart-container" />

@@ -210,11 +210,11 @@ export const tagDetailsEquipments = (deviceId) =>
         data:  deviceId
     })
 
-    export const pointByDeviceId = () =>
-    request<R>({
-        url: `api/v3/manager/point/selectPointByDeviceId/1768514346554793985`,
-        method: 'get',
-    })
+export const pointByDeviceId = () =>
+request<R>({
+    url: `api/v3/manager/point/selectPointByDeviceId/1768514346554793985`,
+    method: 'get',
+})
 //设备下已配置位号数量
 export const pointConfigByDeviceId = () =>
     request<R>({
@@ -226,5 +226,5 @@ export const deviceStatisticsByPointId = (pointid: any) =>
     request<R>({
         url: `api/v3/manager/point/selectDeviceStatisticsByPointId/1768316832571260930`,
         method: 'post',
-        data: JSON.stringify([pointid]),
+        data: pointid,
     })
