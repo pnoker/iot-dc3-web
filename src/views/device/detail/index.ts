@@ -108,6 +108,7 @@ export default defineComponent({
         const device = () => {
             getDeviceById(reactiveData.id)
                 .then((res) => {
+                    console.log(res)
                     reactiveData.data = res.data
                     reactiveData.deviceTable[reactiveData.data.id] = reactiveData.data.deviceName
 
@@ -216,14 +217,12 @@ export default defineComponent({
                     {
                         name: '在线时长',
                         type: 'line',
-                        stack: 'Total',
                         smooth: true,
                         data: Object.values(onlinedata.value).reverse(),
                     },
                     {
                         name: '离线时长',
                         type: 'line',
-                        stack: 'Total',
                         smooth: true,
                         data: Object.values(offlinedata.value).reverse(),
                     },

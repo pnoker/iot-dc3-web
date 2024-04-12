@@ -74,8 +74,10 @@ export default defineComponent({
 
         // 加载驱动数据
         const driver = () => {
+            console.log(reactiveData.id)
             getDriverById(reactiveData.id).then((res) => {
                 reactiveData.data = res.data
+                console.log(res)
             })
         }
 
@@ -158,14 +160,12 @@ export default defineComponent({
                     {
                         name: '在线时长',
                         type: 'line',
-                        stack: 'Total',
                         smooth: true,
                         data: Object.values(onlinedata.value).reverse(),
                     },
                     {
                         name: '离线时长',
                         type: 'line',
-                        stack: 'Total',
                         smooth: true,
                         data: Object.values(offlinedata.value).reverse(),
                     },
