@@ -146,7 +146,7 @@ export default defineComponent({
         const deleteThing = (id, done) => {
             deleteProfile(id)
                 .then((res) => {
-                    if (res.data.ok) {
+                    if (res.ok) {
                         list()
                         done()
                     } else {

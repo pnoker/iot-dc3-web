@@ -60,6 +60,7 @@ export default defineComponent({
             },
         },
     },
+
     setup(props) {
         const deviceAddFormRef: any = ref<InstanceType<typeof deviceAddForm>>()
         const deviceImportFormRef: any = ref<InstanceType<typeof deviceImportForm>>()
@@ -242,7 +243,7 @@ export default defineComponent({
         const deleteThing = (id, done) => {
             deleteDevice(id)
                 .then((res) => {
-                    if (res.data.ok) {
+                    if (res.ok) {
                         list()
                         done()
                     } else {
