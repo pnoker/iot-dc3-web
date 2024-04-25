@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-import { defineComponent, reactive, onMounted, watch, onUpdated, nextTick, ref } from 'vue'
+import { defineComponent, nextTick, onMounted, reactive, ref } from 'vue'
 import { CollectionTag, Edit, Management, Sunset } from '@element-plus/icons-vue'
 
 import { useRoute } from 'vue-router'
 import router from '@/config/router'
 
-import { getDeviceByDriverId, getDeviceStatusByDriverId,tagDetailsTotle,tagDetailsData,tagDetailsEquipments } from '@/api/device'
+import { getDeviceByDriverId, getDeviceStatusByDriverId, tagDetailsData, tagDetailsEquipments, tagDetailsTotle } from '@/api/device'
 import { getProfileByIds } from '@/api/profile'
-import { getDriverByIds } from '@/api/driver'
-import { getDriverById } from '@/api/driver'
+import { getDriverById, getDriverByIds } from '@/api/driver'
 
 import baseCard from '@/components/card/base/BaseCard.vue'
 import detailCard from '@/components/card/detail/DetailCard.vue'
@@ -59,10 +58,10 @@ export default defineComponent({
         //定义位号详情页响应式
         const getTagDetailsData = reactive({
             total: 0,
-            data:'',
-            deviceName:[],
-            equipment:'',
-            equipment1Name:''
+            data: '',
+            deviceName: [],
+            equipment: '',
+            equipment1Name: '',
         })
         const selectedOptions = ref([])
         // const value1 = ref([])
@@ -121,36 +120,36 @@ export default defineComponent({
                     // nothing to do
                 })
         }
-        const tagDetails = ()=>{
+        const tagDetails = () => {
             tagDetailsTotle()
-                .then((res)=>{
+                .then((res) => {
                     console.log(res)
                     getTagDetailsData.total = res.data.count
                     getTagDetailsData.deviceName = res.data.devices.map((device: { deviceName: any }) => device.deviceName)
                     // const deviceNameToAdd = getTagDetailsData.deviceName[0];
                     selectedOptions.value = res.data.devices.map((device: { id: any; deviceName: any }) => ({
                         value: device.id, // 使用设备的 id 作为 value
-                        label: device.deviceName // 使用设备的 deviceName 作为 label
-                    }));
-                    selectedDeviceValue.value = selectedOptions.value.map(option => option.value);
+                        label: device.deviceName, // 使用设备的 deviceName 作为 label
+                    }))
+                    selectedDeviceValue.value = selectedOptions.value.map((option) => option.value)
                     console.log(selectedDeviceValue.value)
-                    return tagDetailsData();
+                    return tagDetailsData()
                 })
-                .then((res)=>{
+                .then((res) => {
                     getTagDetailsData.data = res.data
                     console.log(selectedDeviceValue.value)
-                    return tagDetailsEquipments(selectedDeviceValue.value);
+                    return tagDetailsEquipments(selectedDeviceValue.value)
                 })
-                .then((res)=>{
+                .then((res) => {
                     console.log(selectedDeviceValue.value)
                     console.log(res)
-                    getTagDetailsData.equipment = res.data.map(device =>({
+                    getTagDetailsData.equipment = res.data.map((device) => ({
                         name: device.deviceName,
                         total: device.total,
                     }))
                     console.log(getTagDetailsData.equipment)
-                    Echart2(getTagDetailsData);
-                })                
+                    Echart2(getTagDetailsData)
+                })
                 .catch(() => {
                     // nothing to do
                 })
@@ -173,36 +172,36 @@ export default defineComponent({
             }
         }
         const updateChart = () => {
-            const deletedValues = selectedOptions.value.filter(option => !selectedDeviceValue.value.includes(option.value));
-            const addedValues = selectedDeviceValue.value.filter(value => !selectedOptions.value.some(option => option.value === value));
-        
+            const deletedValues = selectedOptions.value.filter((option) => !selectedDeviceValue.value.includes(option.value))
+            const addedValues = selectedDeviceValue.value.filter((value) => !selectedOptions.value.some((option) => option.value === value))
+
             const updateChartData = (res) => {
                 console.log(res)
-                getTagDetailsData.equipment = res.data.map(device => ({
+                getTagDetailsData.equipment = res.data.map((device) => ({
                     name: device.deviceName,
                     total: device.total,
-                }));
-                Echart2(getTagDetailsData);
-            };
-        
+                }))
+                Echart2(getTagDetailsData)
+            }
+
             if (selectedDeviceValue.value.length === 0 && selectedOptions.value.length > 0) {
-                selectedDeviceValue.value = [selectedOptions.value[0].value];
+                selectedDeviceValue.value = [selectedOptions.value[0].value]
             }
-        
+
             if (deletedValues.length > 0 || addedValues.length > 0) {
-                selectedOptions.value = selectedOptions.value.filter(option => !deletedValues.includes(option.value));
-                selectedDeviceValue.value = selectedDeviceValue.value.filter(value => !deletedValues.includes(value));
-                tagDetailsEquipments(selectedDeviceValue.value).then(updateChartData);
+                selectedOptions.value = selectedOptions.value.filter((option) => !deletedValues.includes(option.value))
+                selectedDeviceValue.value = selectedDeviceValue.value.filter((value) => !deletedValues.includes(value))
+                tagDetailsEquipments(selectedDeviceValue.value).then(updateChartData)
             } else {
-                tagDetailsEquipments(selectedDeviceValue.value).then(updateChartData);
+                tagDetailsEquipments(selectedDeviceValue.value).then(updateChartData)
             }
-        };
+        }
 
         driver()
         device()
 
         //位号详情
-        const InforCard =()=> [
+        const InforCard = () => [
             {
                 title: `当前位号被${getTagDetailsData.total}个设备引用`,
             },
@@ -214,53 +213,52 @@ export default defineComponent({
             tagDetails()
             Echart2(getTagDetailsData)
         })
-        const Echart2 = (getTagDetailsData)=>{
-            var chartDom = document.getElementById('echart2');
-            echarts.dispose(chartDom);
-            var myChart = echarts.init(chartDom);
-            var option;
+        const Echart2 = (getTagDetailsData) => {
+            const chartDom = document.getElementById('echart2')
+            echarts.dispose(chartDom)
+            const myChart = echarts.init(chartDom)
             console.log(getTagDetailsData.equipment)
-            option = {
-                    title: {
-                        text: '统计最近7天位号在不同设备下产生的数据量，最多展示10个设备，可通过下拉选择',
-                        bottom: 'bottom',
-                        textStyle: {
-                            fontSize: 14,
-                        },
+            const option = {
+                title: {
+                    text: '统计最近7天位号在不同设备下产生的数据量，最多展示10个设备，可通过下拉选择',
+                    bottom: 'bottom',
+                    textStyle: {
+                        fontSize: 14,
                     },
-                    tooltip: { trigger: 'axis' },
-                    grid: {
-                        left: '3%',
-                        right: '4%',
-                        bottom: '15%',
-                        containLabel: true,
+                },
+                tooltip: { trigger: 'axis' },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '15%',
+                    containLabel: true,
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['1', '2', '3', '4', '5', '6', '7'],
+                },
+                yAxis: [
+                    {
+                        type: 'value',
                     },
-                    xAxis: {
-                        type: 'category',
-                        boundaryGap: false,
-                        data: ['1', '2', '3', '4', '5', '6', '7'],
-                    },
-                    yAxis: [
-                        {
-                            type: 'value',
-                        },
-                    ],
-                    series: [] as { name: string; type: string; stack: string; smooth: boolean; data: any; }[],
-                };
+                ],
+                series: [] as { name: string; type: string; stack: string; smooth: boolean; data: any }[],
+            }
 
-                for (let i = 0; i < Math.min(getTagDetailsData.equipment.length, 10); i++) {
-                    console.log(getTagDetailsData.equipment)
-                    const seriesData = {
-                        name: getTagDetailsData.equipment[i].name,
-                        type: 'line',
-                        smooth: true,
-                        data: getTagDetailsData.equipment[i].total,
-                    };
-                
-                    option.series.push(seriesData);
+            for (let i = 0; i < Math.min(getTagDetailsData.equipment.length, 10); i++) {
+                console.log(getTagDetailsData.equipment)
+                const seriesData = {
+                    name: getTagDetailsData.equipment[i].name,
+                    type: 'line',
+                    smooth: true,
+                    data: getTagDetailsData.equipment[i].total,
                 }
 
-            option && myChart.setOption(option);
+                option.series.push(seriesData)
+            }
+
+            option && myChart.setOption(option)
             nextTick(() => {
                 window.addEventListener('resize', () => {
                     myChart.resize()

@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-import { computed, defineComponent, reactive, ref, onMounted, watch, onUpdated, nextTick } from 'vue'
+import { computed, defineComponent, nextTick, onMounted, onUpdated, reactive, ref } from 'vue'
 import { CollectionTag, Edit, List, Management, Promotion, Sunset } from '@element-plus/icons-vue'
 
 import { useRoute } from 'vue-router'
 import router from '@/config/router'
 
 import { getDriverById } from '@/api/driver'
-import { getProfileByDeviceId } from '@/api/profile'
-import { getDeviceById, getdeviceOnline, getdeviceOffline, pointByDeviceId, pointConfigByDeviceId, deviceStatisticsByPointId } from '@/api/device'
-import { getProfileByIds } from '@/api/profile'
+import { getProfileByDeviceId, getProfileByIds } from '@/api/profile'
+import { deviceStatisticsByPointId, getDeviceById, getdeviceOffline, getdeviceOnline, pointByDeviceId, pointConfigByDeviceId } from '@/api/device'
 
 import baseCard from '@/components/card/base/BaseCard.vue'
 import detailCard from '@/components/card/detail/DetailCard.vue'
@@ -39,6 +38,7 @@ import pointValueEditForm from '@/views/point/value/edit/PointValueEditForm.vue'
 
 import { timestamp } from '@/utils/CommonUtils'
 import * as echarts from 'echarts'
+
 export default defineComponent({
     name: 'DeviceDetail',
     components: {
@@ -179,14 +179,12 @@ export default defineComponent({
         device()
         profiles()
         //设备详情
-        
-       
+
         const Echart1 = () => {
-            var chartDom1 = document.getElementById('echart1');
-            echarts.dispose(chartDom1);
-            var myChart1 = echarts.init(chartDom1);
-            var option;
-            option = {
+            const chartDom1 = document.getElementById('echart1')
+            echarts.dispose(chartDom1)
+            const myChart1 = echarts.init(chartDom1)
+            const option = {
                 title: {
                     text: '统计最近7天驱动每天的在线和离线时长',
                     bottom: 'bottom',
@@ -228,7 +226,7 @@ export default defineComponent({
                     },
                 ],
             }
-            option && myChart1.setOption(option);
+            option && myChart1.setOption(option)
             nextTick(() => {
                 window.addEventListener('resize', () => {
                     myChart1.resize()
@@ -280,87 +278,86 @@ export default defineComponent({
         //     Echart2(newVal)
         // })
         const ConfigByDeviceId = async () => {
-            try{
+            try {
                 const res = await pointConfigByDeviceId()
                 console.log(res)
                 unConfigCount.value = res.data.unConfigCount
                 configCount.value = res.data.configCount
                 options.value = res.data.points.map((point: { id: any; pointName: any }) => ({
                     value: point.id,
-                    label: point.pointName
-                }));
-                value1.value = options.value.map(option => option.value);
+                    label: point.pointName,
+                }))
+                value1.value = options.value.map((option) => option.value)
                 console.log(value1.value)
                 await DeviceByPointId()
-            }catch (error) {
-                console.error('发生错误:', error);
+            } catch (error) {
+                console.error('发生错误:', error)
             }
         }
         //设备在不同位号下的数据量
         const chartData = ref('')
         const DeviceByPointId = async () => {
-            try{
+            try {
                 // console.log(value1.value)
                 const res = await deviceStatisticsByPointId(value1.value)
                 console.log(res)
-                chartData.value = res.data.map(point =>({
+                chartData.value = res.data.map((point) => ({
                     name: point.pointName,
                     total: point.total,
                 }))
                 console.log(chartData.value)
-                Echart2(chartData);
-            }catch (error) {
-                console.error('发生错误:', error);
+                Echart2(chartData)
+            } catch (error) {
+                console.error('发生错误:', error)
             }
         }
         ConfigByDeviceId()
         // DeviceByPointId()
-        const Echart2 = (chartData)=>{
-            var chartDom = document.getElementById('echart2');
-            echarts.dispose(chartDom);
-            var myChart = echarts.init(chartDom);
-            var option;
-            option = {
-                    title: {
-                        text: '统计最近7天设备下各个位号的每天数据量',
-                        bottom: 'bottom',
-                        textStyle: {
-                            fontSize: 14,
-                        },
+        const Echart2 = (chartData) => {
+            const chartDom = document.getElementById('echart2')
+            echarts.dispose(chartDom)
+            const myChart = echarts.init(chartDom)
+            const option = {
+                title: {
+                    text: '统计最近7天设备下各个位号的每天数据量',
+                    bottom: 'bottom',
+                    textStyle: {
+                        fontSize: 14,
                     },
-                    tooltip: { trigger: 'axis' },
-                    grid: {
-                        left: '3%',
-                        right: '4%',
-                        bottom: '15%',
-                        containLabel: true,
+                },
+                tooltip: { trigger: 'axis' },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '15%',
+                    containLabel: true,
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['1', '2', '3', '4', '5', '6', '7'],
+                },
+                yAxis: [
+                    {
+                        type: 'value',
                     },
-                    xAxis: {
-                        type: 'category',
-                        boundaryGap: false,
-                        data: ['1', '2', '3', '4', '5', '6', '7'],
-                    },
-                    yAxis: [
-                        {
-                            type: 'value',
-                        },
-                    ],
-                    series: [] as { name: string; type: string; stack: string; smooth: boolean; data: any; }[],
-                };
+                ],
+                series: [] as { name: string; type: string; stack: string; smooth: boolean; data: any }[],
+            }
 
-                for (let i = 0; i < Math.min(chartData.value.length, 10); i++) {
-                    console.log(chartData.value.length)
-                    const seriesData = {
-                        name: chartData.value[i].name,
-                        type: 'line',
-                        smooth: true,
-                        data: chartData.value[i].total,
-                    };
-                
-                    option.series.push(seriesData);
+            for (let i = 0; i < Math.min(chartData.value.length, 10); i++) {
+                console.log(chartData.value.length)
+                const seriesData = {
+                    name: chartData.value[i].name,
+                    type: 'line',
+                    smooth: true,
+                    data: chartData.value[i].total,
                 }
 
-            option && myChart.setOption(option);
+                option.series.push(seriesData)
+            }
+
+            option && myChart.setOption(option)
             nextTick(() => {
                 window.addEventListener('resize', () => {
                     myChart.resize()
@@ -369,32 +366,32 @@ export default defineComponent({
         }
         const updateChart = () => {
             console.log('111')
-            const deletedValues = options.value.filter(option => !value1.value.includes(option.value));
-            const addedValues = value1.value.filter(value => !options.value.some(option => option.value === value));
-        
+            const deletedValues = options.value.filter((option) => !value1.value.includes(option.value))
+            const addedValues = value1.value.filter((value) => !options.value.some((option) => option.value === value))
+
             const updateChartData = (res) => {
                 console.log(res)
-                chartData.value = res.data.map(device => ({
+                chartData.value = res.data.map((device) => ({
                     name: device.deviceName,
                     total: device.total,
-                }));
-                Echart2(chartData);
-            };
-        
-            if (value1.value.length === 0 && options.value.length > 0) {
-                value1.value = [options.value[0].value];
+                }))
+                Echart2(chartData)
             }
-        
+
+            if (value1.value.length === 0 && options.value.length > 0) {
+                value1.value = [options.value[0].value]
+            }
+
             if (deletedValues.length > 0 || addedValues.length > 0) {
-                options.value = options.value.filter(option => !deletedValues.includes(option.value));
-                value1.value = value1.value.filter(value => !deletedValues.includes(value));
-                deviceStatisticsByPointId(value1.value).then(updateChartData);
+                options.value = options.value.filter((option) => !deletedValues.includes(option.value))
+                value1.value = value1.value.filter((value) => !deletedValues.includes(value))
+                deviceStatisticsByPointId(value1.value).then(updateChartData)
                 console.log(value1.value)
             } else {
-                deviceStatisticsByPointId(value1.value).then(updateChartData);
+                deviceStatisticsByPointId(value1.value).then(updateChartData)
                 console.log(value1.value)
             }
-        };
+        }
         const pointCard = () => [
             {
                 title: '设备运行时间',

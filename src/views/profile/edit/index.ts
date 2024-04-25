@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { defineComponent, reactive, ref, unref ,onMounted, watch, onUpdated, nextTick} from 'vue'
+import { defineComponent, reactive, ref, unref } from 'vue'
 import { FormInstance, FormRules } from 'element-plus'
-import { Edit, RefreshLeft, Right, Back } from '@element-plus/icons-vue'
+import { Back, Edit, RefreshLeft, Right } from '@element-plus/icons-vue'
 
 import router from '@/config/router'
 import { useRoute } from 'vue-router'
@@ -24,7 +24,7 @@ import { useRoute } from 'vue-router'
 import { getProfileById, updateProfile } from '@/api/profile'
 
 import point from '@/views/point/Point.vue'
-import * as echarts from 'echarts'
+
 export default defineComponent({
     components: { point },
     setup() {

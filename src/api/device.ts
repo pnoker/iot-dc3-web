@@ -181,7 +181,7 @@ export const importDevice = (device: any) =>
         headers: { 'Content-Type': 'multipart/form-data' },
         data: device,
     })
-    export const getdeviceOnline = () =>
+export const getdeviceOnline = () =>
     request<R>({
         url: `api/v3/data/device/status/deviceOnline/1768316832571260930`,
         method: 'get',
@@ -207,14 +207,14 @@ export const tagDetailsEquipments = (deviceId) =>
     request<R>({
         url: `api/v3/manager/point/selectPointStatisticsByDeviceId/1768514129788968962`,
         method: 'POST',
-        data:  deviceId
+        data: deviceId,
     })
 
 export const pointByDeviceId = () =>
-request<R>({
-    url: `api/v3/manager/point/selectPointByDeviceId/1768514346554793985`,
-    method: 'get',
-})
+    request<R>({
+        url: `api/v3/manager/point/selectPointByDeviceId/1768514346554793985`,
+        method: 'get',
+    })
 //设备下已配置位号数量
 export const pointConfigByDeviceId = () =>
     request<R>({
