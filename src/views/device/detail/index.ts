@@ -36,7 +36,7 @@ import pointValueCard from '@/views/point/value/card/PointValueCard.vue'
 import pointValue from '@/views/point/value/PointValue.vue'
 import pointValueEditForm from '@/views/point/value/edit/PointValueEditForm.vue'
 
-import { timestamp } from '@/utils/CommonUtils'
+import { timestamp } from '@/utils/CommonUtil'
 import * as echarts from 'echarts'
 
 export default defineComponent({

@@ -33,7 +33,7 @@ import deviceCard from '@/views/device/card/DeviceCard.vue'
 import device from '@/views/device/Device.vue'
 import pointCard from '@/views/point/card/PointCard.vue'
 
-import { timestamp } from '@/utils/CommonUtils'
+import { timestamp } from '@/utils/CommonUtil'
 import * as echarts from 'echarts'
 export default defineComponent({
     name: 'DriverDetail',
