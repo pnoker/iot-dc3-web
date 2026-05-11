@@ -43,6 +43,12 @@ export default (configEnv: ConfigEnv) => {
     assetFileNames: `assets/dc3.[name].[hash].[ext]`,
     manualChunks: (id: string) => {
       if (id.includes('node_modules')) {
+        if (id.includes('@antv/g6')) {
+          return 'g6-vendor';
+        }
+        if (id.includes('@antv/g2')) {
+          return 'g2-vendor';
+        }
         // Merge vue and element-plus to avoid circular dependency
         if (id.includes('vue') || id.includes('pinia') || id.includes('element-plus') || id.includes('@element-plus')) {
           return 'vue-vendor';
@@ -51,7 +57,7 @@ export default (configEnv: ConfigEnv) => {
           return 'router-vendor';
         }
         if (id.includes('@antv')) {
-          return 'g2-vendor';
+          return 'antv-vendor';
         }
         return 'vendor';
       }
