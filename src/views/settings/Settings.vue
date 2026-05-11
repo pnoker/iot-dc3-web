@@ -83,6 +83,8 @@
     { name: 'settingsUser', title: t('nav.settingsUser'), icon: 'User' },
     { name: 'settingsRole', title: t('nav.settingsRole'), icon: 'UserFilled' },
     { name: 'settingsResource', title: t('nav.settingsResource'), icon: 'Key' },
+    { name: 'settingsGroup', title: t('nav.settingsGroup'), icon: 'FolderOpened' },
+    { name: 'settingsLabel', title: t('nav.settingsLabel'), icon: 'CollectionTag' },
     { name: 'settingsApi', title: t('nav.settingsApi'), icon: 'Link' },
     { name: 'settingsMenu', title: t('nav.settingsMenu'), icon: 'Menu' },
     {
@@ -113,10 +115,19 @@
     const settings = menuStore.findByCode('settings');
     const children = settings?.children || [];
     if (!children.length) return fallback;
-    return children
+    const items = children
       .slice()
       .sort((a, b) => (a.menuIndex ?? 0) - (b.menuIndex ?? 0))
       .map(mapMenuNode);
+    const names = new Set(items.map((item) => item.name));
+    const insertAfterResource = fallback
+      .filter((item) => ['settingsGroup', 'settingsLabel'].includes(item.name) && !names.has(item.name))
+      .reverse();
+    insertAfterResource.forEach((item) => {
+      const index = items.findIndex((current) => current.name === 'settingsResource');
+      items.splice(index >= 0 ? index + 1 : items.length, 0, item);
+    });
+    return items;
   });
 
   const activeMenu = computed(() => String(route.name || 'settingsUser'));

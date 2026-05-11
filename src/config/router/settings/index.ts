@@ -46,6 +46,18 @@ const settingsRouter: RouteRecordRaw = {
           component: () => import('@/views/settings/resource/Resource.vue'),
         },
         {
+          name: 'settingsGroup',
+          path: 'group',
+          meta: { title: 'Groups' },
+          component: () => import('@/views/settings/group/Group.vue'),
+        },
+        {
+          name: 'settingsLabel',
+          path: 'label',
+          meta: { title: 'Labels' },
+          component: () => import('@/views/settings/label/Label.vue'),
+        },
+        {
           name: 'settingsApi',
           path: 'api',
           meta: { title: 'APIs' },

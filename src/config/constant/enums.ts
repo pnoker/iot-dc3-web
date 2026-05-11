@@ -34,6 +34,13 @@ export const RESOURCE_TYPE_OPTIONS: EnumOption[] = [
   { label: 'API', value: 'API' },
 ];
 
+export const ENTITY_TYPE_OPTIONS: EnumOption[] = [
+  { label: 'DRIVER', value: 'DRIVER' },
+  { label: 'PROFILE', value: 'PROFILE' },
+  { label: 'POINT', value: 'POINT' },
+  { label: 'DEVICE', value: 'DEVICE' },
+];
+
 export const RESOURCE_SCOPE_OPTIONS: EnumOption[] = [
   { label: 'ADD', value: 'ADD' },
   { label: 'DELETE', value: 'DELETE' },
