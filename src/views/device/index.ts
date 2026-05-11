@@ -31,6 +31,7 @@ import type { Order } from '@/config/entity';
 
 import blankCard from '@/components/card/blank/BlankCard.vue';
 import skeletonCard from '@/components/card/skeleton/SkeletonCard.vue';
+import EntityBindDialog from '@/components/entity/EntityBindDialog.vue';
 import { failMessage } from '@/utils/NotificationUtil';
 import { isNull } from '@/utils/ValidationUtil';
 import deviceAddForm from './add/DeviceAddForm.vue';
@@ -43,6 +44,7 @@ export default defineComponent({
   components: {
     blankCard,
     skeletonCard,
+    EntityBindDialog,
     deviceTool,
     deviceAddForm,
     deviceImportForm,
@@ -71,6 +73,7 @@ export default defineComponent({
   setup(props) {
     const deviceAddFormRef: any = ref<InstanceType<typeof deviceAddForm>>();
     const deviceImportFormRef: any = ref<InstanceType<typeof deviceImportForm>>();
+    const bindRef = ref<InstanceType<typeof EntityBindDialog>>();
 
     // 定义响应式数据
     const reactiveData = reactive({
@@ -286,13 +289,19 @@ export default defineComponent({
       list();
     };
 
+    const openBind = (row: any) => {
+      bindRef.value?.show('DEVICE', row);
+    };
+
     list();
 
     return {
       deviceAddFormRef,
       deviceImportFormRef,
+      bindRef,
       reactiveData,
       hasData,
+      list,
       search,
       reset,
       showAdd,
@@ -307,6 +316,7 @@ export default defineComponent({
       sort,
       sizeChange,
       currentChange,
+      openBind,
     };
   },
 });

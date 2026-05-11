@@ -104,11 +104,13 @@
           :disable-title="$t('point.card.confirmDisable')"
           :enable-title="$t('point.card.confirmEnable')"
           :delete-title="$t('point.card.confirmDelete')"
+          show-bind
           detail-disabled
           @disable="emitToggle('disable-thing')"
           @enable="emitToggle('enable-thing')"
           @delete="emitDelete"
           @edit="edit"
+          @bind="$emit('bind-thing', data)"
           @detail="detail"
         />
       </div>
@@ -134,7 +136,7 @@
     icon: { type: String, default: 'images/common/point.png' },
   });
 
-  const emit = defineEmits(['disable-thing', 'enable-thing', 'delete-thing']);
+  const emit = defineEmits(['disable-thing', 'enable-thing', 'delete-thing', 'bind-thing']);
 
   const emitToggle = (name: 'disable-thing' | 'enable-thing') => {
     emit(name, props.data.id, props.data.profileId, () => successMessage());

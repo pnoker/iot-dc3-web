@@ -43,12 +43,14 @@
             @disable-thing="disableThing"
             @enable-thing="enableThing"
             @delete-thing="deleteThing"
+            @bind-thing="openBind"
           ></profile-card>
         </el-col>
       </el-row>
     </blank-card>
 
     <profile-add-form ref="profileAddFormRef" @add-thing="addThing"></profile-add-form>
+    <entity-bind-dialog ref="bindRef" @saved="list" />
   </div>
 </template>
 

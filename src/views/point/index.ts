@@ -22,6 +22,7 @@ import { getProfileByIds } from '@/api/profile';
 import type { Order } from '@/config/entity';
 
 import skeletonCard from '@/components/card/skeleton/SkeletonCard.vue';
+import EntityBindDialog from '@/components/entity/EntityBindDialog.vue';
 import pointTool from './tool/PointTool.vue';
 import pointAddForm from './add/PointAddForm.vue';
 import pointCard from './card/PointCard.vue';
@@ -32,6 +33,7 @@ import { failMessage } from '@/utils/NotificationUtil';
 export default defineComponent({
   components: {
     skeletonCard,
+    EntityBindDialog,
     pointTool,
     pointAddForm,
     pointCard,
@@ -72,6 +74,7 @@ export default defineComponent({
   emits: ['pre-handle', 'next-handle'],
   setup(props, { emit }) {
     const pointAddFormRef: any = ref<InstanceType<typeof pointAddForm>>();
+    const bindRef = ref<InstanceType<typeof EntityBindDialog>>();
 
     // 定义响应式数据
     const reactiveData = reactive({
@@ -248,12 +251,18 @@ export default defineComponent({
       emit('next-handle');
     };
 
+    const openBind = (row: any) => {
+      bindRef.value?.show('POINT', row);
+    };
+
     list();
 
     return {
       pointAddFormRef,
+      bindRef,
       reactiveData,
       hasData,
+      list,
       search,
       reset,
       showAdd,
@@ -267,6 +276,7 @@ export default defineComponent({
       currentChange,
       preHandle,
       nextHandle,
+      openBind,
     };
   },
 });

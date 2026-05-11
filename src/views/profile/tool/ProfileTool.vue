@@ -18,8 +18,8 @@
   <tool-card
     :form-model="formData"
     :page="page"
-    @search="$emit('search', $event)"
-    @reset="$emit('reset')"
+    @search="onSearch"
+    @reset="onReset"
     @refresh="$emit('refresh')"
     @sort="$emit('sort')"
     @size-change="$emit('size-change', $event)"
@@ -34,6 +34,11 @@
           :placeholder="$t('profile.tool.profileNamePlaceholder')"
         />
       </el-form-item>
+      <entity-taxonomy-filters
+        v-model:group-id="formData.groupId"
+        v-model:label-id="formData.labelId"
+        entity-type-flag="PROFILE"
+      />
       <el-form-item :label="$t('common.enableFlag')" prop="enableFlag">
         <el-segmented
           v-model="formData.enableFlag"
@@ -57,6 +62,7 @@
   import { reactive } from 'vue';
   import { Plus } from '@element-plus/icons-vue';
   import ToolCard from '@/components/card/tool/ToolCard.vue';
+  import EntityTaxonomyFilters from '@/components/entity/EntityTaxonomyFilters.vue';
 
   defineProps({
     embedded: {
@@ -69,7 +75,21 @@
     },
   });
 
-  defineEmits(['search', 'reset', 'show-add', 'refresh', 'sort', 'size-change', 'current-change']);
+  const emit = defineEmits(['search', 'reset', 'show-add', 'refresh', 'sort', 'size-change', 'current-change']);
 
   const formData = reactive<Record<string, any>>({ enableFlag: '' });
+
+  const onSearch = (data: Record<string, any>) => {
+    const params = { ...data };
+    if (!params.enableFlag) delete params.enableFlag;
+    if (!params.groupId) delete params.groupId;
+    if (!params.labelId) delete params.labelId;
+    emit('search', params);
+  };
+
+  const onReset = () => {
+    Object.keys(formData).forEach((k) => delete formData[k]);
+    formData.enableFlag = '';
+    emit('reset');
+  };
 </script>

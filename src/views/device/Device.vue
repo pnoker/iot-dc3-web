@@ -44,6 +44,7 @@
               @disable-thing="disableThing"
               @enable-thing="enableThing"
               @delete-thing="deleteThing"
+              @bind-thing="openBind"
             />
           </el-col>
         </skeleton-card>
@@ -71,6 +72,7 @@
 
     <device-add-form ref="deviceAddFormRef" @add-thing="addThing" />
     <device-import-form ref="deviceImportFormRef" @import-template="importTemplate" @import-thing="importThing" />
+    <entity-bind-dialog ref="bindRef" @saved="list" />
   </div>
 </template>
 

@@ -60,10 +60,12 @@
           :disable-title="$t('device.card.confirmDisable')"
           :enable-title="$t('device.card.confirmEnable')"
           :delete-title="$t('device.card.confirmDelete')"
+          show-bind
           @disable="emitToggle('disable-thing')"
           @enable="emitToggle('enable-thing')"
           @delete="emitDelete"
           @edit="edit"
+          @bind="$emit('bind-thing', data)"
           @detail="detail"
         />
       </div>
@@ -89,7 +91,7 @@
     icon: { type: String, default: 'images/common/device.png' },
   });
 
-  const emit = defineEmits(['disable-thing', 'enable-thing', 'delete-thing']);
+  const emit = defineEmits(['disable-thing', 'enable-thing', 'delete-thing', 'bind-thing']);
 
   const emitToggle = (name: 'disable-thing' | 'enable-thing') => {
     emit(name, props.data.id, props.data.driverId, () => successMessage());

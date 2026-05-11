@@ -18,8 +18,8 @@
   <tool-card
     :form-model="formData"
     :page="page"
-    @search="$emit('search', $event)"
-    @reset="$emit('reset')"
+    @search="onSearch"
+    @reset="onReset"
     @refresh="$emit('refresh')"
     @sort="$emit('sort')"
     @size-change="$emit('size-change', $event)"
@@ -55,6 +55,11 @@
           />
         </el-select>
       </el-form-item>
+      <entity-taxonomy-filters
+        v-model:group-id="formData.groupId"
+        v-model:label-id="formData.labelId"
+        entity-type-flag="DEVICE"
+      />
       <el-form-item :label="$t('common.enableFlag')" prop="enableFlag">
         <el-segmented
           v-model="formData.enableFlag"
@@ -81,6 +86,7 @@
   import { reactive, ref } from 'vue';
   import { Plus, Upload } from '@element-plus/icons-vue';
   import ToolCard from '@/components/card/tool/ToolCard.vue';
+  import EntityTaxonomyFilters from '@/components/entity/EntityTaxonomyFilters.vue';
   import type { Dictionary } from '@/config/entity';
   import { getDriverDictionary } from '@/api/dictionary';
 
@@ -95,7 +101,16 @@
     },
   });
 
-  defineEmits(['search', 'reset', 'show-add', 'show-import', 'refresh', 'sort', 'size-change', 'current-change']);
+  const emit = defineEmits([
+    'search',
+    'reset',
+    'show-add',
+    'show-import',
+    'refresh',
+    'sort',
+    'size-change',
+    'current-change',
+  ]);
 
   const formData = reactive<Record<string, any>>({ enableFlag: '' });
   const driverDictionaries = ref<Dictionary[]>([]);
@@ -120,5 +135,20 @@
 
   const driverDictionaryVisible = (visible: boolean) => {
     if (visible) driverDictionary('');
+  };
+
+  const onSearch = (data: Record<string, any>) => {
+    const params = { ...data };
+    if (!params.enableFlag) delete params.enableFlag;
+    if (!params.driverId) delete params.driverId;
+    if (!params.groupId) delete params.groupId;
+    if (!params.labelId) delete params.labelId;
+    emit('search', params);
+  };
+
+  const onReset = () => {
+    Object.keys(formData).forEach((k) => delete formData[k]);
+    formData.enableFlag = '';
+    emit('reset');
   };
 </script>

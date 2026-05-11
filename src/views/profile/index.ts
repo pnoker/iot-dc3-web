@@ -22,6 +22,7 @@ import type { Order } from '@/config/entity';
 
 import profileTool from '@/views/profile/tool/ProfileTool.vue';
 import blankCard from '@/components/card/blank/BlankCard.vue';
+import EntityBindDialog from '@/components/entity/EntityBindDialog.vue';
 import profileAddForm from '@/views/profile/add/ProfileAddForm.vue';
 import skeletonCard from '@/components/card/skeleton/SkeletonCard.vue';
 import profileCard from '@/views/profile/card/ProfileCard.vue';
@@ -31,6 +32,7 @@ import { failMessage } from '@/utils/NotificationUtil';
 export default defineComponent({
   components: {
     blankCard,
+    EntityBindDialog,
     skeletonCard,
     profileTool,
     profileAddForm,
@@ -52,6 +54,7 @@ export default defineComponent({
   },
   setup(props) {
     const profileAddFormRef: any = ref<InstanceType<typeof profileAddForm>>();
+    const bindRef = ref<InstanceType<typeof EntityBindDialog>>();
 
     // 定义响应式数据
     const reactiveData = reactive({
@@ -182,12 +185,18 @@ export default defineComponent({
       list();
     };
 
+    const openBind = (row: any) => {
+      bindRef.value?.show('PROFILE', row);
+    };
+
     list();
 
     return {
       profileAddFormRef,
+      bindRef,
       reactiveData,
       hasData,
+      list,
       search,
       reset,
       showAdd,
@@ -199,6 +208,7 @@ export default defineComponent({
       sort,
       sizeChange,
       currentChange,
+      openBind,
     };
   },
 });

@@ -50,10 +50,12 @@
           :disable-title="$t('profile.card.confirmDisable')"
           :enable-title="$t('profile.card.confirmEnable')"
           :delete-title="$t('profile.card.confirmDelete')"
+          show-bind
           @disable="emitAction('disable-thing')"
           @enable="emitAction('enable-thing')"
           @delete="emitAction('delete-thing')"
           @edit="edit"
+          @bind="$emit('bind-thing', data)"
           @detail="detail"
         />
       </div>
@@ -77,7 +79,7 @@
     icon: { type: String, default: 'images/common/profile.png' },
   });
 
-  const emit = defineEmits(['disable-thing', 'enable-thing', 'delete-thing']);
+  const emit = defineEmits(['disable-thing', 'enable-thing', 'delete-thing', 'bind-thing']);
 
   const emitAction = (name: 'disable-thing' | 'enable-thing' | 'delete-thing') => {
     emit(name, props.data.id, () => successMessage());

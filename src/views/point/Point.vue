@@ -48,12 +48,14 @@
             @disable-thing="disableThing"
             @enable-thing="enableThing"
             @delete-thing="deleteThing"
+            @bind-thing="openBind"
           ></point-card>
         </el-col>
       </el-row>
     </blank-card>
 
     <point-add-form ref="pointAddFormRef" :profile-id="profileId" @add-thing="addThing"></point-add-form>
+    <entity-bind-dialog ref="bindRef" @saved="list" />
   </div>
 </template>
 

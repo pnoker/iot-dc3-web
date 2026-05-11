@@ -57,6 +57,9 @@
       <el-button link type="primary" @click="$emit('edit')">
         {{ t('common.edit') }}
       </el-button>
+      <el-button v-if="showBind" link type="primary" @click="$emit('bind')">
+        {{ t('common.bind') }}
+      </el-button>
       <el-button :disabled="detailDisabled" link type="primary" @click="$emit('detail')">
         {{ t('common.detail') }}
       </el-button>
@@ -74,9 +77,10 @@
     enableTitle: { type: String, required: true },
     deleteTitle: { type: String, required: true },
     detailDisabled: { type: Boolean, default: false },
+    showBind: { type: Boolean, default: false },
   });
 
-  defineEmits(['disable', 'enable', 'delete', 'edit', 'detail']);
+  defineEmits(['disable', 'enable', 'delete', 'edit', 'bind', 'detail']);
 
   const { t } = useI18n();
 </script>

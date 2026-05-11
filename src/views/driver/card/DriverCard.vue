@@ -63,6 +63,9 @@
         </div>
         <div v-if="!footer" class="things-card__footer">
           <div class="things-card-footer-operation">
+            <el-button link type="primary" @click.stop="$emit('bind-thing', data)">
+              {{ $t('common.bind') }}
+            </el-button>
             <el-button link type="primary" @click.stop="detail">{{ $t('common.detail') }}</el-button>
           </div>
         </div>
@@ -87,7 +90,7 @@
     footer: { type: Boolean, default: false },
   });
 
-  defineEmits(['select-change']);
+  defineEmits(['select-change', 'bind-thing']);
 
   const status = computed(() => {
     const id = props.data.id;

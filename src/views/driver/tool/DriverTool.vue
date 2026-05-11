@@ -19,8 +19,8 @@
     :form-model="formData"
     :rules="formRule"
     :page="page"
-    @search="$emit('search', $event)"
-    @reset="$emit('reset')"
+    @search="onSearch"
+    @reset="onReset"
     @refresh="$emit('refresh')"
     @sort="$emit('sort')"
     @size-change="$emit('size-change', $event)"
@@ -51,6 +51,11 @@
           :placeholder="$t('driver.tool.hostPlaceholder')"
         />
       </el-form-item>
+      <entity-taxonomy-filters
+        v-model:group-id="formData.groupId"
+        v-model:label-id="formData.labelId"
+        entity-type-flag="DRIVER"
+      />
       <el-form-item :label="$t('common.enableFlag')" prop="enableFlag">
         <el-segmented
           v-model="formData.enableFlag"
@@ -73,6 +78,7 @@
   import type { FormRules } from 'element-plus';
   import { Plus } from '@element-plus/icons-vue';
   import ToolCard from '@/components/card/tool/ToolCard.vue';
+  import EntityTaxonomyFilters from '@/components/entity/EntityTaxonomyFilters.vue';
 
   defineProps({
     page: {
@@ -85,10 +91,24 @@
     },
   });
 
-  defineEmits(['search', 'reset', 'refresh', 'sort', 'size-change', 'current-change']);
+  const emit = defineEmits(['search', 'reset', 'refresh', 'sort', 'size-change', 'current-change']);
 
   const formData = reactive<Record<string, any>>({ enableFlag: '' });
   const formRule = reactive<FormRules>({
     port: [{ type: 'number', message: 'Port must be a number' }],
   });
+
+  const onSearch = (data: Record<string, any>) => {
+    const params = { ...data };
+    if (!params.enableFlag) delete params.enableFlag;
+    if (!params.groupId) delete params.groupId;
+    if (!params.labelId) delete params.labelId;
+    emit('search', params);
+  };
+
+  const onReset = () => {
+    Object.keys(formData).forEach((k) => delete formData[k]);
+    formData.enableFlag = '';
+    emit('reset');
+  };
 </script>

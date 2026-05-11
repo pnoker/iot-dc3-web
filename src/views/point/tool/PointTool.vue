@@ -19,8 +19,8 @@
     :form-model="formData"
     :rules="formRule"
     :page="page"
-    @search="$emit('search', $event)"
-    @reset="$emit('reset')"
+    @search="onSearch"
+    @reset="onReset"
     @refresh="$emit('refresh')"
     @sort="$emit('sort')"
     @size-change="$emit('size-change', $event)"
@@ -60,6 +60,11 @@
           />
         </el-select>
       </el-form-item>
+      <entity-taxonomy-filters
+        v-model:group-id="formData.groupId"
+        v-model:label-id="formData.labelId"
+        entity-type-flag="POINT"
+      />
       <el-form-item :label="$t('common.enableFlag')" prop="enableFlag">
         <el-segmented
           v-model="formData.enableFlag"
@@ -95,6 +100,7 @@
   import { Back, Check, Plus, RefreshLeft, Search } from '@element-plus/icons-vue';
   import { useI18n } from 'vue-i18n';
   import ToolCard from '@/components/card/tool/ToolCard.vue';
+  import EntityTaxonomyFilters from '@/components/entity/EntityTaxonomyFilters.vue';
   import type { Dictionary } from '@/config/entity';
   import { getProfileDictionary } from '@/api/dictionary';
 
@@ -117,7 +123,7 @@
     },
   });
 
-  defineEmits([
+  const emit = defineEmits([
     'search',
     'reset',
     'show-add',
@@ -158,6 +164,21 @@
 
   const profileDictionaryVisible = (visible: boolean) => {
     if (visible) profileDictionary('');
+  };
+
+  const onSearch = (data: Record<string, any>) => {
+    const params = { ...data };
+    if (!params.enableFlag) delete params.enableFlag;
+    if (!params.profileId) delete params.profileId;
+    if (!params.groupId) delete params.groupId;
+    if (!params.labelId) delete params.labelId;
+    emit('search', params);
+  };
+
+  const onReset = () => {
+    Object.keys(formData).forEach((k) => delete formData[k]);
+    formData.enableFlag = '';
+    emit('reset');
   };
 
   profileDictionary();

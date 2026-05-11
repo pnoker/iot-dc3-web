@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { computed, defineComponent, reactive } from 'vue';
+import { computed, defineComponent, reactive, ref } from 'vue';
 
 import { getDriverList, getDriverStatus } from '@/api/driver';
 
@@ -22,6 +22,7 @@ import type { Order } from '@/config/entity';
 
 import blankCard from '@/components/card/blank/BlankCard.vue';
 import skeletonCard from '@/components/card/skeleton/SkeletonCard.vue';
+import EntityBindDialog from '@/components/entity/EntityBindDialog.vue';
 import driverTool from './tool/DriverTool.vue';
 import driverCard from './card/DriverCard.vue';
 
@@ -30,10 +31,13 @@ export default defineComponent({
   components: {
     blankCard,
     skeletonCard,
+    EntityBindDialog,
     driverTool,
     driverCard,
   },
   setup() {
+    const bindRef = ref<InstanceType<typeof EntityBindDialog>>();
+
     // 定义响应式数据
     const reactiveData = reactive({
       loading: true,
@@ -119,17 +123,24 @@ export default defineComponent({
       list();
     };
 
+    const openBind = (row: any) => {
+      bindRef.value?.show('DRIVER', row);
+    };
+
     list();
 
     return {
+      bindRef,
       reactiveData,
       hasData,
+      list,
       search,
       reset,
       refresh,
       sort,
       sizeChange,
       currentChange,
+      openBind,
     };
   },
 });
