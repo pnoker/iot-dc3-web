@@ -1,3 +1,27 @@
+# ⚠️ Merged — this project now lives in [iot-dc3](https://github.com/pnoker/iot-dc3)
+
+**This repository is archived and no longer maintained separately.** The frontend project `iot-dc3-web` has been merged into the [iot-dc3](https://github.com/pnoker/iot-dc3) monorepo under `dc3-web/`, sharing a single version number, CI/CD pipeline, and release process with the backend.
+
+## Get the code
+
+```bash
+# GitHub
+git clone https://github.com/pnoker/iot-dc3.git
+# Gitee
+git clone git@gitee.com:pnoker/iot-dc3.git
+
+cd iot-dc3/dc3-web
+
+pnpm install
+pnpm dev
+```
+
+## Original README (kept for reference)
+
+The content below is the pre-migration README — no longer updated.
+
+---
+
 ## 1. Prepare
 
 - `git`
@@ -8,13 +32,16 @@
 ## 2. Source code
 
 ```bash
-git clone https://github.com/pnoker/iot-dc3-web.git
+# GitHub
+git clone https://github.com/pnoker/iot-dc3.git
+# Gitee
+git clone git@gitee.com:pnoker/iot-dc3.git
 ```
 
 ## 3. Develop
 
 ```bash
-cd iot-dc3-web
+cd iot-dc3/dc3-web
 
 # install
 pnpm install
