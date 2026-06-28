@@ -3,7 +3,7 @@
   "version": "2026.5.22",
   "private": true,
   "author": "pnoker",
-  "description": "IoT DC3 平台前端页面",
+  "description": "IoT DC3 frontend — merged into iot-dc3/dc3-web/, archived",
   "license": "Apache-2.0",
   "homepage": "https://github.com/pnoker/iot-dc3-web",
   "repository": {

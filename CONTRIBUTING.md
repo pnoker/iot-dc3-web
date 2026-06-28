@@ -1,5 +1,7 @@
 # IoT DC3 Contributor’s Guide
 
+> **⚠️ This repository is archived.** The frontend project has been merged into [iot-dc3](https://github.com/pnoker/iot-dc3) under `dc3-web/`. See [iot-dc3/CONTRIBUTING.md](https://github.com/pnoker/iot-dc3/blob/develop/CONTRIBUTING.md) for the current contribution guide.
+
 Are you looking for ways to start contributing to IoT DC3? This guide will help you understand how to contribute to the
 project, giving you an understanding of the types of
 contributions you can make, the standards for each type of contribution, the overall organization of the IoT DC3
